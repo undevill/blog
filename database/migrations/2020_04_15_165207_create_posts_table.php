@@ -15,7 +15,7 @@ class CreatePostsTable extends Migration
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('post_id');
             $table->string('title');
             $table->unsignedBigInteger('author_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
@@ -23,7 +23,7 @@ class CreatePostsTable extends Migration
             $table->timestamps();
 
             $table->foreign('author_id')->references('id')->on('users');
-            $table->foreign('category_id')->references('id')->on('categories');
+
 
         });
     }

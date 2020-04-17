@@ -9,7 +9,5 @@ class Post extends Model
     protected $primaryKey = 'post_id';
 
 
-    public static function find(int $id)
-    {
-    }
+
 }

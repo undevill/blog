@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
+use Auth;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except('index', 'show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,16 +23,16 @@ class PostController extends Controller
     public function index(Request $request)
     {
         if ($request->search) {
-            $posts = Post::join('categories', 'category_id', '=', 'categories.id')
+            $posts = Post::join('users', 'author_id', '=', 'users.id')
                 ->where('title', 'like', '%'.$request->search.'%')
                 ->orWhere('descr','like', '%'.$request->search.'%')
                 ->orWhere('name','like', '%'.$request->search.'%')
                 ->get();
-            return view('news.index', compact('post'));
+            return view('news.index', compact('posts'));
 
         }
-        $posts = Post::join('categories', 'category_id', '=', 'categories.id')
-                ->paginate(6);
+        $posts = Post::join('users', 'author_id', '=', 'users.id')
+                 ->paginate(6);
         return view('news.index', compact('posts'));
     }
 
@@ -45,14 +52,15 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         $post = new Post();
         $post->title = $request->title;
         $post->descr = $request->descr;
+        $post->author_id = Auth::user()->id;
 
         $post->save();
-        return redirect()->route('news.index');
+        return redirect()->route('news.index')->with('success','Новость успешно создана');
     }
 
     /**
@@ -63,7 +71,8 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::find($id);
+        $post = Post::join('users', 'author_id', '=', 'users.id')
+                ->find($id);
         return view('news.show', compact('post'));
     }
 
@@ -75,7 +84,13 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::find($id);
+
+        if ($post->author_id != \Auth::user()->id){
+            return redirect()->route('news.index')->withErrors('Вы не можете редактировать
+             данную новость');
+        }
+        return view('news.edit', compact('post'));
     }
 
     /**
@@ -85,9 +100,21 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
-        //
+        $post = Post::find($id);
+        if ($post->author_id != Auth::user()->id) {
+            return redirect()->route('news.index')->withErrors('Вы не можете редактировать
+             данную новость');
+        }
+        $post->title = $request->title;
+        $post->descr = $request->descr;
+
+        $post->update();
+        $id = $post->post_id;
+        return redirect()->route('news.show', compact('id'));
+
+
     }
 
     /**
@@ -98,6 +125,13 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+
+        if ($post->author_id != Auth::user()->id) {
+            return redirect()->route('news.index')->withErrors('Вы не можете редактировать
+             данную новость');
+        }
+        $post->delete();
+        return redirect()->route('news.index');
     }
 }

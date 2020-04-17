@@ -10884,3 +10884,6 @@ a.text-dark:focus {
 textarea {
     resize: none;
 }
+.button {
+    display:inline-block;
+}

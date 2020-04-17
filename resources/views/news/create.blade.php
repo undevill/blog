@@ -8,19 +8,9 @@
             @csrf
 
             <h2 class="text-center">Добавить новость</h2>
-            <div class="form-group">
-                <lable class="h4">Заголовок новости</lable>
-                <input type="text" class="form-control mt-2" name="title" required>
-            </div>
-            <div class="form-group">
-                <lable class="h4">Текст новости</lable>
-                <textarea name="descr" rows="10" class="form-control mt-2" required></textarea>
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" name="name" required>
-            </div>
+            @include('news.layouts.blocks.form.form')
 
-            <input type="submit" value="Добавить новость" class="btn btn-outline-success">
+            <input type="submit" value="Добавить новость" class="btn btn-secondary">
         </form>
     </div>
 @endsection
