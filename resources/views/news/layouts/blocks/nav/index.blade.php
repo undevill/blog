@@ -13,19 +13,12 @@
             <a class="nav-link text-light h5" href="{{ route('news.create') }}">Добавить<span class="sr-only">(current)
                 </span></a>
             </li>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-light h5" href="#" id="dropdown01" data-toggle="dropdown"
-                   aria-haspopup="true"
-                   aria-expanded="false">Категории</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown01">
-                    <a class="dropdown-item" href="#">Политика</a>
-                    <a class="dropdown-item" href="#">Спорт</a>
-                    <a class="dropdown-item" href="#">Технологии</a>
-                    <a class="dropdown-item" href="#">Музыка</a>
-                    <a class="dropdown-item" href="#">Кино</a>
-                </div>
+            <li class="nav-item active ">
+                <a class="nav-link text-light h5" href="#">Профиль<span class="sr-only">(current)
+                </span></a>
             </li>
+
+
         </ul>
         <form class="form-inline my-2 my-lg-0" action="{{ route('news.index') }}">
             <input class="form-control mr-sm-2" name="search" type="text" placeholder="Найти новость" aria-label="Search">
@@ -66,14 +59,7 @@
 
     </div>
 </nav>
-<div class="container">
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="close">
-                <span aria-hidden="true"></span>
-            </button>
-        </div>
-        @endif
+<div class="container pt-3">
+
 </div>
 
